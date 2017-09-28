@@ -1,6 +1,6 @@
 /** Canvas whiteboard object constructor
   * 
-  * canvasId (string) id canvas element
+  * canvasId (string) id of canvas element
   * bufferHandler (function) optional function to enable and capture drawings
   * options (object)
   * 
@@ -36,7 +36,7 @@ Whiteboard.prototype.init = function() {
         if (typeof this.bufferHandler === 'function') {
             console.info('Binding draw event handlers.');
 
-            this.bindDrawHandlers();
+            this.bindMouseHandlers();
         } else {
             console.info('No buffer handler. Draw input disabled.');
             this.bufferHandler = null;
@@ -69,7 +69,7 @@ Whiteboard.prototype.reset = function(width, height) {
     return rect;
 }
 
-Whiteboard.prototype.bindDrawHandlers = function() {
+Whiteboard.prototype.bindMouseHandlers = function() {
     var that = this;
     this.canvas.onmousedown = function(e) {
             this.isPointerDown = true;
@@ -165,11 +165,14 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
     this.canvasCtx.lineCap = options.lineCap;
     this.canvasCtx.lineJoin = options.lineJoin;
 
+    var offX = options.drawOffsetX ? parseInt(options.drawOffsetX, 10) : 0;
+    var offY = options.drawOffsetY ? parseInt(options.drawOffsetY, 10) : 0;
+
     this.canvasCtx.beginPath();
     for (var i in buffer) {
-        if (i === 0) this.canvasCtx.moveTo(buffer[i][0]+parseInt(options.drawOffsetX), buffer[i][1]+parseInt(options.drawOffsetY));
+        if (i === 0) this.canvasCtx.moveTo(buffer[i][0]+offX, buffer[i][1]+offY);
         else {
-            this.canvasCtx.lineTo(buffer[i][0]+parseInt(options.drawOffsetX), buffer[i][1]+parseInt(options.drawOffsetY));
+            this.canvasCtx.lineTo(buffer[i][0]+offX, buffer[i][1]+offY);
             this.canvasCtx.stroke();
         }
     }
