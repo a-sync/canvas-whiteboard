@@ -1,0 +1,39 @@
+<!doctype html>
+<html>
+<head>
+    <script type="text/javascript" src="whiteboard.js"></script>
+</head>
+<body>
+
+<canvas id="canvas-1" width="200" height="200" style="background:lightgrey"></canvas>
+<canvas id="canvas-2" width="200" height="200"></canvas>
+<canvas id="canvas-3" width="200" height="200"></canvas>
+
+<script type="text/javascript">
+    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
+    var wb2 = new Whiteboard('canvas-2', null);
+    var wb3 = new Whiteboard('canvas-3', null);
+
+    function wb1_bufferHandler(buff, opt) {
+        opt.strokeStyle = '#00f';
+        opt.lineWidth = 20;
+        wb2.draw(buff, opt);
+    
+        opt.strokeStyle = '#fff';
+        opt.lineWidth = 1;
+        wb2.draw(buff, opt);
+
+        var gradient = wb3.canvasCtx.createLinearGradient(0,0,wb3.canvas.width,wb3.canvas.height);
+        gradient.addColorStop('0', 'magenta');
+        gradient.addColorStop('0.25', 'blue');
+        gradient.addColorStop('0.50', 'red');
+        gradient.addColorStop('0.75', 'yellow');
+        gradient.addColorStop('1', 'green');
+
+        opt.strokeStyle = gradient;
+        opt.lineWidth = 30;
+        wb3.draw(buff, opt);
+    }
+</script>
+</body>
+</html>
