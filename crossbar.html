@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+    <script type="text/javascript" src="https://cdn.rawgit.com/crossbario/autobahn-js-built/c5d10b27/autobahn.min.js"></script>
+    <script type="text/javascript" src="whiteboard.js"></script>
+</head>
+<body>
+
+<canvas id="canvas-1" width="800" height="600" style="background:#f0f0f0"></canvas>
+
+<script type="text/javascript">
+    var connection = new autobahn.Connection({
+       //url: 'wss://demo.crossbar.io/ws',
+       url: 'ws://127.0.0.1:8080/ws',
+       realm: 'realm1'
+    });
+
+    connection.onopen = function (session, details) {
+        console.log('Connection opened...', details);
+
+        var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
+
+        function wb1_bufferHandler(buffer, options) {
+            session.publish('canvas.whiteboard', buffer, options);
+        }
+
+        session.subscribe('canvas.whiteboard', function(buffer, options, details) {
+            wb1.draw(buffer, options);
+        });
+    };
+
+    connection.onclose = console.error;
+
+    connection.open();
+</script>
+</body>
+</html>

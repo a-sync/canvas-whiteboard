@@ -122,10 +122,10 @@ Whiteboard.prototype.bindDrawHandlers = function() {
     };
 
     this.canvas.onmouseup = function(e){
-        if(this.isPointerDown === true) {
+        if (this.isPointerDown === true) {
             this.isPointerDown = false;
 
-            if(that.drawBuffer.length <= 2) return;
+            if (that.drawBuffer.length <= 2) return;
 
             that.canvasCtx.closePath();
 
@@ -144,8 +144,8 @@ Whiteboard.prototype.bindDrawHandlers = function() {
 
             that.drawBuffer.length = 0;
 
-            if(that.cleanTimer) clearTimeout(that.cleanTimer);
-            that.cleanTimer = setTimeout(function() {that.clean()}, that.options.timeout);
+            if (that.cleanTimer) clearTimeout(that.cleanTimer);
+            if (that.options.timeout) that.cleanTimer = setTimeout(function() {that.clean()}, that.options.timeout);
         }
     };
 
@@ -155,7 +155,7 @@ Whiteboard.prototype.bindDrawHandlers = function() {
 Whiteboard.prototype.draw = function(buffer, drawOptions) {
     var options = Object.assign({}, this.options, drawOptions);
 
-    if(options.width !== this.canvas.width || options.height !== this.canvas.height) {
+    if (options.width !== this.canvas.width || options.height !== this.canvas.height) {
         this.reset(options.width, options.height);
     }
 
@@ -166,8 +166,8 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
     this.canvasCtx.lineJoin = options.lineJoin;
 
     this.canvasCtx.beginPath();
-    for(var i in buffer) {
-        if(i === 0) this.canvasCtx.moveTo(buffer[i][0]+parseInt(options.drawOffsetX), buffer[i][1]+parseInt(options.drawOffsetY));
+    for (var i in buffer) {
+        if (i === 0) this.canvasCtx.moveTo(buffer[i][0]+parseInt(options.drawOffsetX), buffer[i][1]+parseInt(options.drawOffsetY));
         else {
             this.canvasCtx.lineTo(buffer[i][0]+parseInt(options.drawOffsetX), buffer[i][1]+parseInt(options.drawOffsetY));
             this.canvasCtx.stroke();
@@ -176,8 +176,10 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
     this.canvasCtx.closePath();
 
     if(this.cleanTimer) clearTimeout(this.cleanTimer);
-    var that = this;
-    this.cleanTimer = setTimeout(function(){that.clean()}, options.timeout);
+    if (options.timeout) {
+        var that = this;
+        this.cleanTimer = setTimeout(function(){that.clean()}, options.timeout);
+    }
 }
 
 function getBorderlessBoundingClientRect(elem) {
