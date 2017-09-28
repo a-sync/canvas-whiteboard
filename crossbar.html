@@ -16,7 +16,7 @@
     });
 
     connection.onopen = function (session, details) {
-        console.log('Connection opened...', details);
+        console.info('Connection opened...', details);
 
         var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
 
@@ -24,7 +24,8 @@
             session.publish('canvas.whiteboard', buffer, options);
         }
 
-        session.subscribe('canvas.whiteboard', function(buffer, options, details) {
+        session.subscribe('canvas.whiteboard', function(buffer, options) {
+            options.strokeStyle = '#0f0';
             wb1.draw(buffer, options);
         });
     };
