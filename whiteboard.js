@@ -114,9 +114,6 @@ Whiteboard.prototype.bindMouseHandlers = function() {
     this.canvas.onmousemove = function(e) {
         e.preventDefault();
         if(this.isPointerDown === true) {
-            // TODO: only add line, if length from prev. pixel bigger then line width/2
-            // TODO: filter out duplicate buffer entries
-
             const pos = that.getCursorPosition(e);
 
             that.setCanvasOptions(that.options);
