@@ -1,4 +1,4 @@
-
+'use strict';
 
 /** Canvas whiteboard object constructor
   * 
@@ -46,14 +46,13 @@ Whiteboard.prototype.init = function() {
 
         this.setCanvasOptions(this.options);
 
-        console.log('New canvas whiteboard.', this.options);
+        if (console.log) {
+            console.log('New canvas whiteboard.', this.canvas.id, this.options);
+        }
 
         if (typeof this.bufferHandler === 'function') {
-            console.info('Binding draw event handlers.');
-
             this.bindMouseHandlers();
         } else {
-            console.info('No buffer handler. Draw input disabled.');
             this.bufferHandler = null;
         }
     } else {
@@ -61,13 +60,40 @@ Whiteboard.prototype.init = function() {
     }
 };
 
-Whiteboard.prototype.setCanvasOptions = function(options) {
-    this.canvasCtx.strokeStyle = options.strokeStyle;
-    this.canvasCtx.lineWidth = options.lineWidth;
-    this.canvasCtx.fillStyle = options.fillStyle;
-    this.canvasCtx.lineCap = options.lineCap;
-    this.canvasCtx.lineJoin = options.lineJoin;
-}
+Whiteboard.prototype.draw = function(buffer, drawOptions) {
+    const options = Object.assign({}, this.options, drawOptions);
+
+    this.setCanvasOptions(options);
+
+    const offX = options.drawOffsetX ? parseInt(options.drawOffsetX, 10) : 0;
+    const offY = options.drawOffsetY ? parseInt(options.drawOffsetY, 10) : 0;
+
+    let started = false;
+    this.canvasCtx.beginPath();
+    for (const pos of buffer) {
+        if (started) {
+            this.canvasCtx.lineTo(pos[0]+offX, pos[1]+offY);
+            this.canvasCtx.stroke();
+        } else {
+            started = true;
+            this.canvasCtx.moveTo(pos[0]+offX, pos[1]+offY);
+        }
+    }
+    this.canvasCtx.closePath();
+
+    if(this.cleanTimer) clearTimeout(this.cleanTimer);
+    if (options.timeout) {
+        const that = this;
+        this.cleanTimer = setTimeout(function(){that.clean()}, options.timeout);
+    }
+};
+
+Whiteboard.prototype.clean = function() {
+    this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    if (this.cleanTimer) clearTimeout(this.cleanTimer);
+    this.cleanTimer = null;
+};
 
 Whiteboard.prototype.bindMouseHandlers = function() {
     const that = this;
@@ -140,42 +166,7 @@ Whiteboard.prototype.unbindMouseHandlers = function() {
     this.canvas.onmouseout = null;
 };
 
-Whiteboard.prototype.draw = function(buffer, drawOptions) {
-    const options = Object.assign({}, this.options, drawOptions);
-
-    this.setCanvasOptions(options);
-
-    const offX = options.drawOffsetX ? parseInt(options.drawOffsetX, 10) : 0;
-    const offY = options.drawOffsetY ? parseInt(options.drawOffsetY, 10) : 0;
-
-    let started = false;
-    this.canvasCtx.beginPath();
-    for (const pos of buffer) {
-        if (started) {
-            this.canvasCtx.lineTo(pos[0]+offX, pos[1]+offY);
-            this.canvasCtx.stroke();
-        } else {
-            started = true;
-            this.canvasCtx.moveTo(pos[0]+offX, pos[1]+offY);
-        }
-    }
-    this.canvasCtx.closePath();
-
-    if(this.cleanTimer) clearTimeout(this.cleanTimer);
-    if (options.timeout) {
-        const that = this;
-        this.cleanTimer = setTimeout(function(){that.clean()}, options.timeout);
-    }
-}
-
-Whiteboard.prototype.clean = function() {
-    this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-    if (this.cleanTimer) clearTimeout(this.cleanTimer);
-    this.cleanTimer = null;
-}
-
-Whiteboard.prototype.getCursorPosition = function(e) {
+Whiteboard.prototype.getCursorPosition = function(mouseEvent) {
     const styling = getComputedStyle(this.canvas, null);
 
     const topBorder = parseInt(styling.getPropertyValue('border-top-width'), 10);
@@ -183,30 +174,24 @@ Whiteboard.prototype.getCursorPosition = function(e) {
     const bottomBorder = parseInt(styling.getPropertyValue('border-bottom-width'), 10);
     const leftBorder = parseInt(styling.getPropertyValue('border-left-width'), 10);
 
-    this.borderX = rightBorder + leftBorder;
-    this.borderY = topBorder + bottomBorder;
-
-    let rect = this.canvas.getBoundingClientRect();
-
-    rect.width -= rightBorder + leftBorder;
-    rect.height -= topBorder + bottomBorder;
-
-    rect.top += topBorder;
-    rect.right -= rightBorder;
-    rect.bottom -= bottomBorder;
-    rect.left -= leftBorder;
-
-    rect.x += leftBorder;
-    rect.y += topBorder;
+    const rect = this.canvas.getBoundingClientRect();
 
     //const topOff = window.pageYOffset || document.documentElement.scrollTop;
     //const leftOff = window.pageXOffset || document.documentElement.scrollLeft;
-    //console.log('x:'+e.pageX+' y:'+e.pageY, 'leftOff:'+leftOff+' topOff:'+topOff+' offsetLeft:'+this.offsetLeft+' offsetTop:'+this.offsetTop, rect);
-    //const canvasX = (e.pageX - rect.left - leftOff);
-    //const canvasY = (e.pageY - rect.top - topOff);
+    //console.log('x:'+mouseEvent.pageX+' y:'+mouseEvent.pageY, 'leftOff:'+leftOff+' topOff:'+topOff+' offsetLeft:'+this.offsetLeft+' offsetTop:'+this.offsetTop, rect);
+    //const canvasX = (mouseEvent.pageX - rect.left - leftOff) * (this.canvas.width / rect.width);
+    //const canvasY = (mouseEvent.pageY - rect.top - topOff) * (this.canvas.height / rect.height);
 
-    const canvasX = (e.clientX - rect.left) * (this.canvas.width / rect.width);
-    const canvasY = (e.clientY - rect.top) * (this.canvas.height / rect.height);
+    const canvasX = (mouseEvent.clientX - rect.left - leftBorder) * (this.canvas.width / (rect.width - rightBorder - leftBorder));
+    const canvasY = (mouseEvent.clientY - rect.top - topBorder) * (this.canvas.height / (rect.height - topBorder - bottomBorder));
 
     return [canvasX, canvasY];
-}
+};
+
+Whiteboard.prototype.setCanvasOptions = function(options) {
+    this.canvasCtx.strokeStyle = options.strokeStyle;
+    this.canvasCtx.lineWidth = options.lineWidth;
+    this.canvasCtx.fillStyle = options.fillStyle;
+    this.canvasCtx.lineCap = options.lineCap;
+    this.canvasCtx.lineJoin = options.lineJoin;
+};

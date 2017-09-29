@@ -1,25 +1,29 @@
 # Canvas whiteboard
 
-# Usage
-You must set a buffer handler to enable mouse input.
+## Usage
+Init a whiteboard object with a canvas element's id.
+You must set a buffer handler to enable drawing.
+You can define the default option values for the object.
+
+```html
+<canvas id="mywb" width="1920" height="1080"></canvas>
+```
+
 ```javascript
-// Handle mouse drawings
+// Handle drawings
 const bufferHandler = function(buffer, options) {
     console.log(buffer.length, options);
 }
 
-const whiteboard = new Whiteboard('canvasId', bufferHandler, options);
+const whiteboard = new Whiteboard('mywb', bufferHandler, options);
 ```
 
-To create a whiteboard without drawing function, define bufferHandler as **null**.
+To create a whiteboard without drawing enabled, define `bufferHandler` as `null`.
 
-When creating a new whiteboard, the canvas size is set to the rendered element's size.
-If they differ when a new drawing is started the whiteboard is reset.
+**You should define the same canvas width/height for connected whiteboards.**  
+Use the options or the canvas element attributes.
 
-If the canvas size is different from the size options when using the .draw() method, 
-the canvas is reset to the dimensions defined in the options.
-
-# Default Options
+### Default options
 ```javascript
 {
     strokeStyle: '#f00',
@@ -27,34 +31,48 @@ the canvas is reset to the dimensions defined in the options.
     fillStyle: 'solid',
     lineCap: 'round',
     lineJoin: 'round',
-    timeout: 10000,
+    timeout: 20000,
     drawOffsetX: 0,
-    drawOffsetY: 0
+    drawOffsetY: 0,
+    width: null,
+    height: null
 }
 ```
 
-# API
-### .draw(buffer, options)
-Draw the buffer to the canvas with the given options.
+## API
+### Whiteboard(canvasId, bufferHandler, options)
+  * canvasId (string) id of canvas element
+  * bufferHandler (function) optional function to enable and capture drawings
+  * options (object)
 
-### .clean()
+#### .draw(buffer, options)
+Draw the buffer to the canvas. Available options will overwrite the default values.
+  * buffer (array)
+  * options (object)
+
+#### .clean()
 Cleans the current canvas.
 
-### .reset()
-Reset the object's options and the size of the canvas to the element's size.
-
-### .bindMouseHandlers()
+#### .bindMouseHandlers()
 Set mouse event handlers to the canvas. (onmousedown, onmousemove, onmouseup, onmouseout)
 
-### .unbindMouseHandlers()
+#### .unbindMouseHandlers()
 Remove mouse event handlers from the canvas.
 
-# Crossbar test
+#### .getCursorPosition(mouseEvent)
+Returns the mouse cursor position relative to the canvas resolution.
+  * mouseEvent (MouseEvent)
+
+#### .setCanvasOptions(options)
+Immediately sets the canvas context properties passed in options.
+  * options (object)
+
+## Crossbar test
 You need crossbar installed. (crossbar.io)
 
-Init crossbar default config and start the router.
+Initialize crossbar service with the default template from the root folder and start the router.
 ```bash
-# /canvas-whiteboard
+cd canvas-whiteboard
 crossbar init
 crossbar start
 ```
