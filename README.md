@@ -1,7 +1,7 @@
 # Canvas whiteboard
 
 ## Usage
-Init a whiteboard object with a canvas element's id.  
+Initialize a whiteboard object with a canvas element's id.  
 You must set a buffer handler to enable drawing.  
 You can define the default option values for the object.
 ```html
