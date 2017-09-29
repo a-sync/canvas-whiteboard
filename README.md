@@ -39,10 +39,10 @@ To create a whiteboard without drawing enabled, define `bufferHandler` as `null`
 Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHandlers()`.
   * canvasId (string) id of canvas element in the DOM
   * bufferHandler (function) define a buffer handler to enable mouse drawings
-  * options (object) define default option values for each whiteboard
+  * options (object) define default option values for the whiteboard instance
 
 #### .bufferHandler(buffer, options)
-  * buffer (array) filled with arrays of x,y coordinates relative to the source whiteboard's inner canvas `[[0,0],[20,10],[40,20]...]`
+  * buffer (array) filled with arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
   * options (object) some options of the source whiteboard
     ```javascript
     {
@@ -55,8 +55,8 @@ Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHan
     ```
 
 #### .draw(buffer, options)
-Draw the buffer to the canvas. Available options will overwrite the default values of the whiteboard.
-  * buffer (array) arrays of x,y coordinates relative to the whiteboard's inner canvas `[[0,0],[20,10],[40,20]...]`
+Draw the buffer to the whiteboard.
+  * buffer (array) arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
   * options (object) options to override when drawing the buffer to the whiteboard
     ```javascript
     {
@@ -72,7 +72,7 @@ Draw the buffer to the canvas. Available options will overwrite the default valu
     ```
 
 #### .clean()
-Cleans the current canvas.
+Clean the whiteboard.
 
 #### .bindMouseHandlers()
 Set mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, onmouseout)*
@@ -80,7 +80,7 @@ Set mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, o
 #### .unbindMouseHandlers()
 Remove mouse event handlers from the canvas.
 
-## Crossbar test
+## Network transport test
 You need crossbar installed. (crossbar.io)
 
 Initialize crossbar service with the default template from the root folder and start the router.
