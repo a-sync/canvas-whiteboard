@@ -1,14 +1,12 @@
 # Canvas whiteboard
 
 ## Usage
-Init a whiteboard object with a canvas element's id.
-You must set a buffer handler to enable drawing.
+Init a whiteboard object with a canvas element's id.  
+You must set a buffer handler to enable drawing.  
 You can define the default option values for the object.
-
 ```html
 <canvas id="mywb" width="1920" height="1080"></canvas>
 ```
-
 ```javascript
 // Handle drawings
 const bufferHandler = function(buffer, options) {
@@ -58,14 +56,6 @@ Set mouse event handlers to the canvas. (onmousedown, onmousemove, onmouseup, on
 
 #### .unbindMouseHandlers()
 Remove mouse event handlers from the canvas.
-
-#### .getCursorPosition(mouseEvent)
-Returns the mouse cursor position relative to the canvas resolution.
-  * mouseEvent (MouseEvent)
-
-#### .setCanvasOptions(options)
-Immediately sets the canvas context properties passed in options.
-  * options (object)
 
 ## Crossbar test
 You need crossbar installed. (crossbar.io)
