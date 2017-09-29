@@ -14,7 +14,7 @@ function Whiteboard(canvasId, bufferHandler, options) {
             fillStyle: 'solid',
             lineCap: 'round',
             lineJoin: 'round',
-            timeout: 10000,
+            timeout: 20000,
             drawOffsetX: 0,
             drawOffsetY: 0
         },
@@ -54,8 +54,6 @@ Whiteboard.prototype.clean = function() {
 }
 
 Whiteboard.prototype.reset = function(width, height) {
-    this.clean();
-
     var rect = getBorderlessBoundingClientRect(this.canvas);
     this.canvas.width = width || Math.floor(rect.width);
     this.canvas.height = height || Math.floor(rect.height);
@@ -125,7 +123,7 @@ Whiteboard.prototype.bindMouseHandlers = function() {
         if (this.isPointerDown === true) {
             this.isPointerDown = false;
 
-            if (that.drawBuffer.length <= 2) return;
+            if (that.drawBuffer.length <= 1) return;
 
             that.canvasCtx.closePath();
 
@@ -150,6 +148,16 @@ Whiteboard.prototype.bindMouseHandlers = function() {
     };
 
     this.canvas.onmouseout = this.canvas.onmouseup;
+};
+
+Whiteboard.prototype.unbindMouseHandlers = function() {
+    this.drawBuffer.length = 0;
+    this.canvas.isPointerDown = false;
+
+    this.canvas.onmousedown = null;
+    this.canvas.onmousemove = null;
+    this.canvas.onmouseup = null;
+    this.canvas.onmouseout = null;
 };
 
 Whiteboard.prototype.draw = function(buffer, drawOptions) {

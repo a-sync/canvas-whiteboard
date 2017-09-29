@@ -1,28 +1,34 @@
 <!doctype html>
 <html>
 <head>
-    <script type="text/javascript" src="whiteboard.js"></script>
+<script src="whiteboard.js"></script>
 </head>
 <body>
 
-<canvas id="canvas-1" width="200" height="200" style="background:#f0f0f0"></canvas>
-<canvas id="canvas-2" width="200" height="200"></canvas>
-<canvas id="canvas-3" width="200" height="200"></canvas>
+<canvas id="canvas-1" width="400" height="400" style="width:400px;height:400px;background:#f0f0f0;"></canvas>
+<canvas id="canvas-2" width="1000" height="1000" style="width:250px;height:250px;background:#f0ffff;cursor:crosshair;position:relative;top:-100px;right:-50px"></canvas>
+<br/>
+<canvas id="canvas-3" width="300" height="300" style="background:#fff0ff;cursor:none"></canvas>
 
-<script type="text/javascript">
+<script>
     var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
-    var wb2 = new Whiteboard('canvas-2', null);
+    var wb2 = new Whiteboard('canvas-2', wb2_bufferHandler);
     var wb3 = new Whiteboard('canvas-3', null);
 
     function wb1_bufferHandler(buff, opt) {
+        opt.strokeStyle = '#f0f';
+        wb3.draw(buff, opt);
+
         opt.strokeStyle = '#00f';
         opt.lineWidth = 20;
         wb2.draw(buff, opt);
-    
+
         opt.strokeStyle = '#fff';
         opt.lineWidth = 1;
         wb2.draw(buff, opt);
+    }
 
+    function wb2_bufferHandler(buff, opt) {
         var gradient = wb3.canvasCtx.createLinearGradient(0,0,wb3.canvas.width,wb3.canvas.height);
         gradient.addColorStop('0', 'magenta');
         gradient.addColorStop('0.25', 'blue');
@@ -32,8 +38,10 @@
 
         opt.strokeStyle = gradient;
         opt.lineWidth = 30;
+        wb1.draw(buff, opt);
         wb3.draw(buff, opt);
     }
 </script>
+
 </body>
 </html>
