@@ -17,8 +17,8 @@ function Whiteboard(canvasId, bufferHandler, options) {
             lineCap: 'round',
             lineJoin: 'round',
             timeout: 20000,
-            drawOffsetX: 0,
-            drawOffsetY: 0,
+            offsetX: 0,
+            offsetY: 0,
             width: null,
             height: null
         },
@@ -65,8 +65,8 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
 
     this.setCanvasOptions(options);
 
-    const offX = options.drawOffsetX ? parseInt(options.drawOffsetX, 10) : 0;
-    const offY = options.drawOffsetY ? parseInt(options.drawOffsetY, 10) : 0;
+    const offX = options.offsetX ? parseInt(options.offsetX, 10) : 0;
+    const offY = options.offsetY ? parseInt(options.offsetY, 10) : 0;
 
     let started = false;
     this.canvasCtx.beginPath();

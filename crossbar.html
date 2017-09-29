@@ -4,9 +4,16 @@
     <script type="text/javascript" src="web/js/autobahn.js"></script>
     <script type="text/javascript" src="whiteboard.js"></script>
 </head>
-<body>
+<body style="text-align:center">
 
-<canvas id="canvas-1" width="800" height="600" style="background:#f0f0f0"></canvas>
+<button onclick="wb1.options.strokeStyle='red';">R</button>
+<button onclick="wb1.options.strokeStyle='green';">G</button>
+<button onclick="wb1.options.strokeStyle='blue';">B</button>
+<button onclick="wb1.options.lineWidth=10">10</button>
+<button onclick="wb1.options.lineWidth=20">20</button>
+<button onclick="wb1.options.lineWidth=30">30</button>
+<br/>
+<canvas id="canvas-1" width="1920" height="1080" style="width:90vw;background:#f0f0f0"></canvas>
 
 <script type="text/javascript">
     var connection = new autobahn.Connection({
@@ -15,17 +22,18 @@
        realm: 'realm1'
     });
 
+    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
+
+    function wb1_bufferHandler(buffer, options) {
+        if (connection.isOpen) {
+            connection.session.publish('canvas.whiteboard', buffer, options);
+        }
+    }
+
     connection.onopen = function (session, details) {
         console.info('Connection opened...', details);
 
-        var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
-
-        function wb1_bufferHandler(buffer, options) {
-            session.publish('canvas.whiteboard', buffer, options);
-        }
-
         session.subscribe('canvas.whiteboard', function(buffer, options) {
-            options.strokeStyle = '#0f0';
             wb1.draw(buffer, options);
         });
     };

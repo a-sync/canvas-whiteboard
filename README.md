@@ -1,25 +1,22 @@
 # Canvas whiteboard
+Initialize a whiteboard with a canvas element's id.  
+*You should define the same inner canvas width/height for connected whiteboards. Use the options or the canvas element attributes.*
 
 ## Usage
-Initialize a whiteboard object with a canvas element's id.  
-You must set a buffer handler to enable drawing.  
-You can define the default option values for the object.
 ```html
-<canvas id="mywb" width="1920" height="1080"></canvas>
+<canvas id="canvas-1" width="1920" height="1080"></canvas>
 ```
+
 ```javascript
 // Handle drawings
-const bufferHandler = function(buffer, options) {
+function bufferHandler(buffer, options) {
     console.log(buffer.length, options);
 }
 
-const whiteboard = new Whiteboard('mywb', bufferHandler, options);
+const whiteboard = new Whiteboard('canvas-1', bufferHandler, options);
 ```
 
 To create a whiteboard without drawing enabled, define `bufferHandler` as `null`.
-
-**You should define the same canvas width/height for connected whiteboards.**  
-Use the options or the canvas element attributes.
 
 ### Default options
 ```javascript
@@ -30,29 +27,55 @@ Use the options or the canvas element attributes.
     lineCap: 'round',
     lineJoin: 'round',
     timeout: 20000,
-    drawOffsetX: 0,
-    drawOffsetY: 0,
+    offsetX: 0,
+    offsetY: 0,
     width: null,
     height: null
 }
 ```
 
 ## API
-### Whiteboard(canvasId, bufferHandler, options)
-  * canvasId (string) id of canvas element
-  * bufferHandler (function) optional function to enable and capture drawings
-  * options (object)
+### new Whiteboard(canvasId, bufferHandler, options)
+Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHandlers()`.
+  * canvasId (string) id of canvas element in the DOM
+  * bufferHandler (function) define a buffer handler to enable mouse drawings
+  * options (object) define default option values for each whiteboard
+
+#### .bufferHandler(buffer, options)
+  * buffer (array) filled with arrays of x,y coordinates relative to the source whiteboard's inner canvas `[[0,0],[20,10],[40,20]...]`
+  * options (object) some options of the source whiteboard
+    ```javascript
+    {
+        width (int)
+        height (int)
+        strokeStyle (string)
+        lineWidth (string)
+        timeout (int)
+    }
+    ```
 
 #### .draw(buffer, options)
-Draw the buffer to the canvas. Available options will overwrite the default values.
-  * buffer (array)
-  * options (object)
+Draw the buffer to the canvas. Available options will overwrite the default values of the whiteboard.
+  * buffer (array) arrays of x,y coordinates relative to the whiteboard's inner canvas `[[0,0],[20,10],[40,20]...]`
+  * options (object) options to override when drawing the buffer to the whiteboard
+    ```javascript
+    {
+        strokeStyle (string)
+        lineWidth (string)
+        fillStyle (string)
+        lineCap (string)
+        lineJoin (string)
+        timeout (int)
+        offsetX (int)
+        offsetY (int)
+    }
+    ```
 
 #### .clean()
 Cleans the current canvas.
 
 #### .bindMouseHandlers()
-Set mouse event handlers to the canvas. (onmousedown, onmousemove, onmouseup, onmouseout)
+Set mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, onmouseout)*
 
 #### .unbindMouseHandlers()
 Remove mouse event handlers from the canvas.

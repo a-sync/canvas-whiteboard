@@ -5,7 +5,13 @@
 </head>
 <body>
 
-<button onclick="wb1.clean();wb2.clean();wb3.clean();">CLEAN</button>
+<button onclick="wb1.clean();wb2.clean();wb3.clean();">CLEAN ALL</button>
+<button onclick="wb1.options.strokeStyle='red';">R</button>
+<button onclick="wb1.options.strokeStyle='green';">G</button>
+<button onclick="wb1.options.strokeStyle='blue';">B</button>
+<button onclick="wb1.options.lineWidth=10">10</button>
+<button onclick="wb1.options.lineWidth=20">20</button>
+<button onclick="wb1.options.lineWidth=30">30</button>
 <br/>
 <canvas id="canvas-1" width="600" height="400" style="width:400px;height:267px;background:#f0f0f0;"></canvas>
 <canvas id="canvas-2" width="600" height="400" style="border:20px solid gold;width:200px;height:134px;background:#f0ffff;cursor:crosshair;position:relative;top:-100px;right:-50px"></canvas>
@@ -18,12 +24,9 @@
     var wb3 = new Whiteboard('canvas-3', null);
 
     function wb1_bufferHandler(buff, opt) {
-        opt.strokeStyle = '#f0f';
         wb2.draw(buff, opt);
 
-        opt.strokeStyle = '#00f';
         wb3.draw(buff, opt);
-
         opt.strokeStyle = '#fff';
         opt.lineWidth = 1;
         wb3.draw(buff, opt);
