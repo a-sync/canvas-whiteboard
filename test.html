@@ -5,10 +5,12 @@
 </head>
 <body>
 
-<canvas id="canvas-1" width="400" height="400" style="width:400px;height:400px;background:#f0f0f0;"></canvas>
-<canvas id="canvas-2" width="1000" height="1000" style="width:250px;height:250px;background:#f0ffff;cursor:crosshair;position:relative;top:-100px;right:-50px"></canvas>
+<button onclick="wb1.clean();wb2.clean();wb3.clean();">CLEAN</button>
 <br/>
-<canvas id="canvas-3" width="300" height="300" style="background:#fff0ff;cursor:none"></canvas>
+<canvas id="canvas-1" width="600" height="600" style="width:400px;height:400px;background:#f0f0f0;"></canvas>
+<canvas id="canvas-2" width="600" height="600" style="border:20px solid gold;width:200px;height:200px;background:#f0ffff;cursor:crosshair;position:relative;top:-100px;right:-50px"></canvas>
+<br/>
+<canvas id="canvas-3" width="600" height="600" style="background:#fff0ff;cursor:none"></canvas>
 
 <script>
     var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
@@ -17,15 +19,15 @@
 
     function wb1_bufferHandler(buff, opt) {
         opt.strokeStyle = '#f0f';
-        wb3.draw(buff, opt);
+        wb2.draw(buff, opt);
 
         opt.strokeStyle = '#00f';
         opt.lineWidth = 20;
-        wb2.draw(buff, opt);
+        wb3.draw(buff, opt);
 
         opt.strokeStyle = '#fff';
         opt.lineWidth = 1;
-        wb2.draw(buff, opt);
+        wb3.draw(buff, opt);
     }
 
     function wb2_bufferHandler(buff, opt) {
