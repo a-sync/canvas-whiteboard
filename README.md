@@ -22,15 +22,17 @@ To create a whiteboard without drawing enabled, define `bufferHandler` as `null`
 ```javascript
 {
     strokeStyle: '#f00',
-    lineWidth: '10',
     fillStyle: 'solid',
+    globalAlpha: 1,
+    lineWidth: '10',
     lineCap: 'round',
     lineJoin: 'round',
+    globalCompositeOperation: 'source-over',
     timeout: 20000,
-    offsetX: 0,
-    offsetY: 0,
     width: null,
-    height: null
+    height: null,
+    offsetX: 0,
+    offsetY: 0
 }
 ```
 
@@ -46,11 +48,16 @@ Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHan
   * options (object) some options of the source whiteboard
     ```javascript
     {
+        strokeStyle (string)
+        fillStyle (string)
+        globalAlpha (float)
+        lineWidth (string)
+        lineCap (string)
+        lineJoin (string)
+        globalCompositeOperation (string)
+        timeout (int)
         width (int)
         height (int)
-        strokeStyle (string)
-        lineWidth (string)
-        timeout (int)
     }
     ```
 
@@ -61,10 +68,12 @@ Draw the buffer to the whiteboard.
     ```javascript
     {
         strokeStyle (string)
-        lineWidth (string)
         fillStyle (string)
+        globalAlpha (float)
+        lineWidth (string)
         lineCap (string)
         lineJoin (string)
+        globalCompositeOperation (string)
         timeout (int)
         offsetX (int)
         offsetY (int)

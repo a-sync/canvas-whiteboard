@@ -13,13 +13,13 @@
 <button onclick="wb1.options.lineWidth=20">20</button>
 <button onclick="wb1.options.lineWidth=30">30</button>
 <br/>
-<canvas id="canvas-1" width="600" height="400" style="width:400px;height:267px;background:#f0f0f0;"></canvas>
-<canvas id="canvas-2" width="600" height="400" style="border:20px solid gold;width:200px;height:134px;background:#f0ffff;cursor:crosshair;position:relative;top:-100px;right:-50px"></canvas>
+<canvas id="canvas-1" width="600" height="400" style="width:400px;height:267px;outline:1px solid black"></canvas>
+<canvas id="canvas-2" width="600" height="400" style="border:20px solid gold;width:200px;height:134px;cursor:crosshair;position:relative;top:-100px;right:-50px"></canvas>
 <br/>
-<canvas id="canvas-3" width="600" height="400" style="background:#fff0ff;cursor:none"></canvas>
+<canvas id="canvas-3" width="600" height="400" style="outline:1px solid gray;cursor:none"></canvas>
 
 <script>
-    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
+    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler, {globalAlpha: 0.1});
     var wb2 = new Whiteboard('canvas-2', wb2_bufferHandler);
     var wb3 = new Whiteboard('canvas-3', null);
 

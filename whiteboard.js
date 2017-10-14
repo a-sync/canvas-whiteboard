@@ -12,15 +12,17 @@ function Whiteboard(canvasId, bufferHandler, options) {
     this.bufferHandler = bufferHandler || null;
     this.options = Object.assign({
             strokeStyle: '#f00',
-            lineWidth: '10',
             fillStyle: 'solid',
+            globalAlpha: 1,
+            lineWidth: '10',
             lineCap: 'round',
             lineJoin: 'round',
+            globalCompositeOperation: 'source-over',
             timeout: 20000,
-            offsetX: 0,
-            offsetY: 0,
             width: null,
-            height: null
+            height: null,
+            offsetX: 0,
+            offsetY: 0
         },
         options
     );
@@ -30,7 +32,7 @@ function Whiteboard(canvasId, bufferHandler, options) {
     this.drawBuffer = [];
 
     this.init();
-};
+}
 
 Whiteboard.prototype.init = function() {
     if (this.canvas || this.canvas.nodeName === 'CANVAS') {
@@ -45,6 +47,7 @@ Whiteboard.prototype.init = function() {
         }
 
         this.setCanvasOptions(this.options);
+        this.canvasCtx.save();
 
         if (console.log) {
             console.log('New canvas whiteboard.', this.canvas.id, this.options);
@@ -68,15 +71,15 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
     const offX = options.offsetX ? parseInt(options.offsetX, 10) : 0;
     const offY = options.offsetY ? parseInt(options.offsetY, 10) : 0;
 
-    let started = false;
+    let starting = true;
     this.canvasCtx.beginPath();
     for (const pos of buffer) {
-        if (started) {
+        if (starting) {
+            this.canvasCtx.moveTo(pos[0]+offX, pos[1]+offY);
+            starting = false;
+        } else {
             this.canvasCtx.lineTo(pos[0]+offX, pos[1]+offY);
             this.canvasCtx.stroke();
-        } else {
-            started = true;
-            this.canvasCtx.moveTo(pos[0]+offX, pos[1]+offY);
         }
     }
     this.canvasCtx.closePath();
@@ -129,17 +132,22 @@ Whiteboard.prototype.bindMouseHandlers = function() {
         if (this.isPointerDown === true) {
             this.isPointerDown = false;
 
-            if (that.drawBuffer.length <= 1) return;
-
             that.canvasCtx.closePath();
+
+            //if (that.drawBuffer.length <= 1) return;
 
             if (that.bufferHandler) {
                 that.bufferHandler(that.drawBuffer, {
-                    width: this.width,
-                    height: this.height,
                     strokeStyle: that.options.strokeStyle,
+                    fillStyle: that.options.fillStyle,
+                    globalAlpha: that.options.globalAlpha,
                     lineWidth: that.options.lineWidth,
-                    timeout: that.options.timeout
+                    lineCap: that.options.lineCap,
+                    lineJoin: that.options.lineJoin,
+                    globalCompositeOperation: that.options.globalCompositeOperation,
+                    timeout: that.options.timeout,
+                    width: this.width,
+                    height: this.height
                 });
             }
 
@@ -187,8 +195,10 @@ Whiteboard.prototype.getCursorPosition = function(mouseEvent) {
 
 Whiteboard.prototype.setCanvasOptions = function(options) {
     this.canvasCtx.strokeStyle = options.strokeStyle;
-    this.canvasCtx.lineWidth = options.lineWidth;
     this.canvasCtx.fillStyle = options.fillStyle;
+    this.canvasCtx.globalAlpha = options.globalAlpha;
+    this.canvasCtx.lineWidth = options.lineWidth;
     this.canvasCtx.lineCap = options.lineCap;
     this.canvasCtx.lineJoin = options.lineJoin;
+    this.canvasCtx.globalCompositeOperation = options.globalCompositeOperation;
 };
