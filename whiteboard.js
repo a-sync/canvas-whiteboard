@@ -30,6 +30,7 @@ function Whiteboard(canvasId, bufferHandler, options) {
     this.canvasCtx = null;
     this.cleanTimer = null;
     this.drawBuffer = [];
+    this.canvasSnapShot = null;
 
     this.init();
 }
@@ -47,7 +48,7 @@ Whiteboard.prototype.init = function() {
         }
 
         this.setCanvasOptions(this.options);
-        this.canvasCtx.save();
+        //this.canvasCtx.save();
 
         if (console.log) {
             console.log('New canvas whiteboard.', this.canvas.id, this.options);
@@ -66,23 +67,21 @@ Whiteboard.prototype.init = function() {
 Whiteboard.prototype.draw = function(buffer, drawOptions) {
     const options = Object.assign({}, this.options, drawOptions);
 
-    this.setCanvasOptions(options);
-
     const offX = options.offsetX ? parseInt(options.offsetX, 10) : 0;
     const offY = options.offsetY ? parseInt(options.offsetY, 10) : 0;
 
-    let starting = true;
-    this.canvasCtx.beginPath();
-    for (const pos of buffer) {
-        if (starting) {
-            this.canvasCtx.moveTo(pos[0]+offX, pos[1]+offY);
-            starting = false;
-        } else {
-            this.canvasCtx.lineTo(pos[0]+offX, pos[1]+offY);
-            this.canvasCtx.stroke();
-        }
+    if (this.canvasSnapShot) {
+        this.restoreCanvas();
     }
-    this.canvasCtx.closePath();
+
+    this.setCanvasOptions(options);
+    this.render(buffer, offX, offY);
+
+    if (this.canvasSnapShot) {
+        this.stashCanvas();
+        this.setCanvasOptions(this.options);
+        this.render(this.drawBuffer);
+    }
 
     if(this.cleanTimer) clearTimeout(this.cleanTimer);
     if (options.timeout) {
@@ -94,23 +93,61 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
 Whiteboard.prototype.clean = function() {
     this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
+    if (this.canvasSnapShot) {
+        this.stashCanvas();
+        this.setCanvasOptions(this.options);
+        this.render(this.drawBuffer);
+    }
+
     if (this.cleanTimer) clearTimeout(this.cleanTimer);
     this.cleanTimer = null;
 };
 
+Whiteboard.prototype.stashCanvas = function() {
+    this.canvasSnapShot = this.canvasCtx.getImageData(0, 0, this.canvas.width, this.canvas.height);
+};
+
+Whiteboard.prototype.restoreCanvas = function() {
+    if (!this.canvasSnapShot) {
+        return;
+    }
+
+    this.canvasCtx.putImageData(this.canvasSnapShot, 0, 0);
+};
+
+Whiteboard.prototype.render = function(buffer, offsetX, offsetY) {
+    if (buffer.length === 0) {
+        return;
+    }
+
+    if (!offsetX) offsetX = 0;
+    if (!offsetY) offsetY = 0;
+
+    let starting = true;
+    this.canvasCtx.beginPath();
+    for (const pos of buffer) {
+        if (starting) {
+            this.canvasCtx.moveTo(pos[0]+offsetX, pos[1]+offsetY);
+            starting = false;
+        } else {
+            this.canvasCtx.lineTo(pos[0]+offsetX, pos[1]+offsetY);
+        }
+    }
+    this.canvasCtx.stroke();
+    this.canvasCtx.closePath();
+};
+
 Whiteboard.prototype.bindMouseHandlers = function() {
     const that = this;
+
     this.canvas.onmousedown = function(e) {
         e.preventDefault();
         this.isPointerDown = true;
         that.drawBuffer.length = 0;
 
+        that.stashCanvas();
+
         const pos = that.getCursorPosition(e);
-
-        that.setCanvasOptions(that.options);
-
-        that.canvasCtx.beginPath();
-        that.canvasCtx.moveTo(pos[0], pos[1]);
         that.drawBuffer.push(pos);
     };
 
@@ -118,12 +155,11 @@ Whiteboard.prototype.bindMouseHandlers = function() {
         e.preventDefault();
         if(this.isPointerDown === true) {
             const pos = that.getCursorPosition(e);
-
-            that.setCanvasOptions(that.options);
-
-            that.canvasCtx.lineTo(pos[0], pos[1]);
-            that.canvasCtx.stroke();
             that.drawBuffer.push(pos);
+
+            that.restoreCanvas();
+            that.setCanvasOptions(that.options);
+            that.render(that.drawBuffer);
         }
     };
 
@@ -132,12 +168,14 @@ Whiteboard.prototype.bindMouseHandlers = function() {
         if (this.isPointerDown === true) {
             this.isPointerDown = false;
 
-            that.canvasCtx.closePath();
+            that.canvasSnapShot = null;
 
-            //if (that.drawBuffer.length <= 1) return;
+            if (that.drawBuffer.length === 0) {
+                return;
+            }
 
             if (that.bufferHandler) {
-                that.bufferHandler(that.drawBuffer, {
+                that.bufferHandler(that.drawBuffer.slice(), {
                     strokeStyle: that.options.strokeStyle,
                     fillStyle: that.options.fillStyle,
                     globalAlpha: that.options.globalAlpha,

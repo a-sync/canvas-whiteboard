@@ -19,7 +19,9 @@
 <canvas id="canvas-3" width="600" height="400" style="outline:1px solid gray;cursor:none"></canvas>
 
 <script>
-    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler, {globalAlpha: 0.1});
+    'use strict';
+
+    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler, {globalAlpha: 0.5});
     var wb2 = new Whiteboard('canvas-2', wb2_bufferHandler);
     var wb3 = new Whiteboard('canvas-3', null);
 

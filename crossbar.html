@@ -13,20 +13,26 @@
 <button onclick="wb1.options.lineWidth=20">20</button>
 <button onclick="wb1.options.lineWidth=30">30</button>
 <br/>
-<canvas id="canvas-1" width="1920" height="1080" style="width:90vw;background:#f0f0f0"></canvas>
+<canvas id="canvas-1" width="1920" height="1080" style="width:90vw;outline:1px solid black"></canvas>
 
 <script type="text/javascript">
+    'use strict';
+
     var connection = new autobahn.Connection({
        //url: 'wss://demo.crossbar.io/ws',
        url: 'ws://127.0.0.1:8080/ws',
        realm: 'realm1'
     });
 
-    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler);
+    var wb1 = new Whiteboard('canvas-1', wb1_bufferHandler, {globalAlpha: 0.5});
 
     function wb1_bufferHandler(buffer, options) {
         if (connection.isOpen) {
+            console.info('Sending drawing', buffer.length);
             connection.session.publish('canvas.whiteboard', buffer, options);
+            //setTimeout(function() {
+            //    connection.session.publish('canvas.whiteboard', buffer, options);
+            //}, 2000);
         }
     }
 
@@ -34,6 +40,7 @@
         console.info('Connection opened...', details);
 
         session.subscribe('canvas.whiteboard', function(buffer, options) {
+            console.info('Receiving drawing', buffer.length);
             wb1.draw(buffer, options);
         });
     };
