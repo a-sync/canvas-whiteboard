@@ -24,7 +24,7 @@ To create a whiteboard without drawing enabled, define `bufferHandler` as `null`
   * `lineWidth: 10` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth)
   * `lineCap: 'round'` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap)
   * `lineJoin: 'round'` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin)
-  * `globalCompositeOperation: 'source-over',` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
+  * `globalCompositeOperation: 'source-over'` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
   * `timeout: 20000` // time delay in ms for clearing the whiteboard
   * `width: null` // [canvas property](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width)
   * `height: null` // [canvas property](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height)
@@ -34,9 +34,9 @@ To create a whiteboard without drawing enabled, define `bufferHandler` as `null`
 ## API
 ### new Whiteboard(canvasId, bufferHandler, options)
 Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHandlers()`.
-  * canvasId (string) id of canvas element in the DOM
-  * bufferHandler (function) define a buffer handler to enable mouse drawings
-  * options (object) available default option values for the whiteboard instance
+  * `canvasId` (string) id of canvas element in the DOM
+  * `bufferHandler` (function) define a buffer handler to enable mouse drawings
+  * `options` (object) available default option values for the whiteboard instance
     ```javascript
     {
         strokeStyle
@@ -54,8 +54,8 @@ Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHan
     ```
 
 #### .bufferHandler(buffer, options)
-  * buffer (array) filled with arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
-  * options (object) some options of the source whiteboard
+  * `buffer` (array) filled with arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
+  * `options` (object) some options of the source whiteboard
     ```javascript
     {
         strokeStyle
@@ -72,8 +72,8 @@ Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHan
 
 #### .draw(buffer, options)
 Draw the buffer to the whiteboard.
-  * buffer (array) arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
-  * options (object) available options to override when drawing the buffer to the whiteboard
+  * `buffer` (array) arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
+  * `options` (object) available options to override when drawing the buffer to the whiteboard
     ```javascript
     {
         strokeStyle
