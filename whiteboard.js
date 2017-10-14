@@ -12,9 +12,8 @@ function Whiteboard(canvasId, bufferHandler, options) {
     this.bufferHandler = bufferHandler || null;
     this.options = Object.assign({
             strokeStyle: '#f00',
-            fillStyle: 'solid',
             globalAlpha: 1,
-            lineWidth: '10',
+            lineWidth: 10,
             lineCap: 'round',
             lineJoin: 'round',
             globalCompositeOperation: 'source-over',
@@ -177,7 +176,6 @@ Whiteboard.prototype.bindMouseHandlers = function() {
             if (that.bufferHandler) {
                 that.bufferHandler(that.drawBuffer.slice(), {
                     strokeStyle: that.options.strokeStyle,
-                    fillStyle: that.options.fillStyle,
                     globalAlpha: that.options.globalAlpha,
                     lineWidth: that.options.lineWidth,
                     lineCap: that.options.lineCap,
@@ -233,7 +231,6 @@ Whiteboard.prototype.getCursorPosition = function(mouseEvent) {
 
 Whiteboard.prototype.setCanvasOptions = function(options) {
     this.canvasCtx.strokeStyle = options.strokeStyle;
-    this.canvasCtx.fillStyle = options.fillStyle;
     this.canvasCtx.globalAlpha = options.globalAlpha;
     this.canvasCtx.lineWidth = options.lineWidth;
     this.canvasCtx.lineCap = options.lineCap;

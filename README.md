@@ -19,64 +19,72 @@ const whiteboard = new Whiteboard('canvas-1', bufferHandler, options);
 To create a whiteboard without drawing enabled, define `bufferHandler` as `null`.
 
 ### Default options
-```javascript
-{
-    strokeStyle: '#f00',
-    fillStyle: 'solid',
-    globalAlpha: 1,
-    lineWidth: '10',
-    lineCap: 'round',
-    lineJoin: 'round',
-    globalCompositeOperation: 'source-over',
-    timeout: 20000,
-    width: null,
-    height: null,
-    offsetX: 0,
-    offsetY: 0
-}
-```
+  * `strokeStyle: '#f00'` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/strokeStyle)
+  * `globalAlpha: 1` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalAlpha)
+  * `lineWidth: 10` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth)
+  * `lineCap: 'round'` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap)
+  * `lineJoin: 'round'` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin)
+  * `globalCompositeOperation: 'source-over',` // [canvas context property](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/globalCompositeOperation)
+  * `timeout: 20000` // time delay in ms for clearing the whiteboard
+  * `width: null` // [canvas property](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/width)
+  * `height: null` // [canvas property](https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/height)
+  * `offsetX: 0` // horizontal drawing offset in pixels
+  * `offsetY: 0` // vertical drawing offset in pixels
 
 ## API
 ### new Whiteboard(canvasId, bufferHandler, options)
 Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHandlers()`.
   * canvasId (string) id of canvas element in the DOM
   * bufferHandler (function) define a buffer handler to enable mouse drawings
-  * options (object) define default option values for the whiteboard instance
+  * options (object) available default option values for the whiteboard instance
+    ```javascript
+    {
+        strokeStyle
+        globalAlpha
+        lineWidth
+        lineCap
+        lineJoin
+        globalCompositeOperation
+        timeout
+        width
+        height
+        offsetX
+        offsetY
+    }
+    ```
 
 #### .bufferHandler(buffer, options)
   * buffer (array) filled with arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
   * options (object) some options of the source whiteboard
     ```javascript
     {
-        strokeStyle (string)
-        fillStyle (string)
-        globalAlpha (float)
-        lineWidth (string)
-        lineCap (string)
-        lineJoin (string)
-        globalCompositeOperation (string)
-        timeout (int)
-        width (int)
-        height (int)
+        strokeStyle
+        globalAlpha
+        lineWidth
+        lineCap
+        lineJoin
+        globalCompositeOperation
+        timeout
+        width
+        height
     }
     ```
 
 #### .draw(buffer, options)
 Draw the buffer to the whiteboard.
   * buffer (array) arrays of x,y coordinates relative to the inner canvas `[[0,0],[20,10],[40,20]...]`
-  * options (object) options to override when drawing the buffer to the whiteboard
+  * options (object) available options to override when drawing the buffer to the whiteboard
     ```javascript
     {
-        strokeStyle (string)
-        fillStyle (string)
-        globalAlpha (float)
-        lineWidth (string)
-        lineCap (string)
-        lineJoin (string)
-        globalCompositeOperation (string)
-        timeout (int)
-        offsetX (int)
-        offsetY (int)
+        strokeStyle
+        globalAlpha
+        lineWidth
+        lineCap
+        lineJoin
+        globalCompositeOperation
+        timeout
+        offsetX
+        offsetY
     }
     ```
 
@@ -90,7 +98,7 @@ Set mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, o
 Remove mouse event handlers from the canvas.
 
 ## Network transport test
-You need crossbar installed. (crossbar.io)
+You need [crossbar](https://crossbar.io/docs/Installation/) installed.
 
 Initialize crossbar service with the default template from the root folder and start the router.
 ```bash
@@ -99,3 +107,8 @@ crossbar init
 crossbar start
 ```
 Open instances of crossbar.html in multiple browsers.
+
+## TODO
+ * filter out middle points from buffer before sending it to handler
+ * v2: only send starting coordinate + deltas of next positions
+ * v2: buffer all drawings separately with unique timeouts
