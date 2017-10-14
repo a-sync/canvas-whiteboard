@@ -125,7 +125,7 @@ Whiteboard.prototype.render = function(buffer, offsetX, offsetY) {
 
     let starting = true;
     this.canvasCtx.beginPath();
-    for (const pos of buffer) {
+    for (let pos of buffer) {
         if (starting) {
             this.canvasCtx.moveTo(pos[0]+offsetX, pos[1]+offsetY);
             starting = false;
