@@ -35,8 +35,8 @@ To create a whiteboard without drawing enabled, define `bufferHandler` as `null`
 ### new Whiteboard(canvasId, bufferHandler, options)
 Returns a new whiteboard object. Invokes `.init()` and optionally `.bindMouseHandlers()`.
   * `canvasId` (string) id of canvas element in the DOM
-  * `bufferHandler` (function) define a buffer handler to enable mouse drawings
-  * `options` (object) available default option values for the whiteboard instance
+  * `bufferHandler` (function) optional handler function to enable and capture drawings
+  * `options` (object) available options for the new whiteboard instance
     ```javascript
     {
         strokeStyle

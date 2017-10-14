@@ -2,9 +2,9 @@
 
 /** Canvas whiteboard object constructor
   * 
-  * canvasId (string) id of canvas element
-  * bufferHandler (function) optional function to enable and capture drawings
-  * options (object)
+  * canvasId (string) id of canvas element in the DOM
+  * bufferHandler (function) optional handler function to enable and capture drawings
+  * options (object) available options for the new whiteboard instance
   * 
 */
 function Whiteboard(canvasId, bufferHandler, options) {
