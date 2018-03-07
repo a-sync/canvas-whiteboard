@@ -92,13 +92,13 @@ Draw the buffer to the whiteboard.
 Clean the whiteboard.
 
 #### .bindMouseHandlers()
-Set mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, onmouseout)*
+Bind mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, onmouseout)*
 
 #### .unbindMouseHandlers()
 Remove mouse event handlers from the canvas.
 
 #### .bindTouchHandlers()
-Set touch event handlers to the canvas. *(touchstart, touchmove, touchend, touchcancel)*
+Bind touch event handlers to the canvas. *(touchstart, touchmove, touchend, touchcancel)*
 
 #### .unbindTouchHandlers()
 Remove touch event handlers from the canvas.
@@ -118,3 +118,4 @@ Open instances of crossbar.html in multiple browsers.
  * filter out middle points from buffer before sending it to handler
  * v2: only send starting coordinate + deltas of next positions
  * v2: buffer all drawings separately with unique timeouts
+ * v2: multi touch drawing support
