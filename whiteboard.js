@@ -55,6 +55,7 @@ Whiteboard.prototype.init = function() {
 
         if (typeof this.bufferHandler === 'function') {
             this.bindMouseHandlers();
+            this.bindTouchHandlers();
         } else {
             this.bufferHandler = null;
         }
@@ -237,3 +238,43 @@ Whiteboard.prototype.setCanvasOptions = function(options) {
     this.canvasCtx.lineJoin = options.lineJoin;
     this.canvasCtx.globalCompositeOperation = options.globalCompositeOperation;
 };
+
+Whiteboard.prototype.bindTouchHandlers = function() {
+    this.canvas.addEventListener('touchstart', touchHandler, true);
+    this.canvas.addEventListener('touchmove', touchHandler, true);
+    this.canvas.addEventListener('touchend', touchHandler, true);
+    this.canvas.addEventListener('touchcancel', touchHandler, true);
+};
+
+Whiteboard.prototype.unbindTouchHandlers = function() {
+    this.canvas.removeEventListener('touchstart', touchHandler, true);
+    this.canvas.removeEventListener('touchmove', touchHandler, true);
+    this.canvas.removeEventListener('touchend', touchHandler, true);
+    this.canvas.removeEventListener('touchcancel', touchHandler, true);
+};
+
+function touchHandler(event)
+{
+    const eventMap = {
+        touchstart: 'mousedown',
+        touchmove: 'mousemove',
+        touchend: 'mouseup',
+        touchcancel: 'mouseup',
+    };
+
+    if (!Object.prototype.hasOwnProperty.call(eventMap, event.type)) {
+        return;
+    }
+
+    const touches = event.changedTouches;
+    const first = touches[0];
+
+    let simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent(eventMap[event.type], true, true, window, 1, 
+                                first.screenX, first.screenY, 
+                                first.clientX, first.clientY, false, 
+                                false, false, false, 0/*left*/, null);
+
+    first.target.dispatchEvent(simulatedEvent);
+    event.preventDefault();
+}

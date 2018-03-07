@@ -97,6 +97,12 @@ Set mouse event handlers to the canvas. *(onmousedown, onmousemove, onmouseup, o
 #### .unbindMouseHandlers()
 Remove mouse event handlers from the canvas.
 
+#### .bindTouchHandlers()
+Set touch event handlers to the canvas. *(touchstart, touchmove, touchend, touchcancel)*
+
+#### .unbindTouchHandlers()
+Remove touch event handlers from the canvas.
+
 ## Network transport test
 You need [crossbar](https://crossbar.io/docs/Installation/) installed.
 
