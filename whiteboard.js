@@ -83,7 +83,10 @@ Whiteboard.prototype.draw = function(buffer, drawOptions) {
         this.render(this.drawBuffer);
     }
 
-    if(this.cleanTimer) clearTimeout(this.cleanTimer);
+    if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+    }
+
     if (options.timeout) {
         const that = this;
         this.cleanTimer = setTimeout(function(){that.clean()}, options.timeout);
@@ -99,7 +102,10 @@ Whiteboard.prototype.clean = function() {
         this.render(this.drawBuffer);
     }
 
-    if (this.cleanTimer) clearTimeout(this.cleanTimer);
+    if (this.cleanTimer) {
+        clearTimeout(this.cleanTimer);
+    }
+
     this.cleanTimer = null;
 };
 
@@ -190,8 +196,13 @@ Whiteboard.prototype.bindMouseHandlers = function() {
 
             that.drawBuffer.length = 0;
 
-            if (that.cleanTimer) clearTimeout(that.cleanTimer);
-            if (that.options.timeout) that.cleanTimer = setTimeout(function() {that.clean()}, that.options.timeout);
+            if (that.cleanTimer) {
+                clearTimeout(that.cleanTimer);
+            }
+
+            if (that.options.timeout) {
+                that.cleanTimer = setTimeout(function() {that.clean()}, that.options.timeout);
+            }
         }
     };
 
