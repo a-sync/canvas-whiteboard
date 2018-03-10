@@ -264,6 +264,7 @@ Whiteboard.prototype.unbindTouchHandlers = function() {
     this.canvas.removeEventListener('touchcancel', touchHandler, true);
 };
 
+let firstTouchId = 0;
 function touchHandler(event) {
     const eventMap = {
         touchstart: 'mousedown',
@@ -277,11 +278,25 @@ function touchHandler(event) {
     }
 
     const touches = event.changedTouches;
-    const first = touches[0];
+    let first;
 
-    const simulatedEvent = document.createEvent('MouseEvent');
-    simulatedEvent.initMouseEvent(eventMap[event.type], true, true, window, 1, first.screenX, first.screenY, first.clientX, first.clientY, false, false, false, false, 0/*left*/, null);
+    if (firstTouchId) {
+        first = touches.find(t => t.identifier === firstTouchId);
+    } else {
+        first = touches[0];
+        firstTouchId = first.identifier;
+    }
 
-    first.target.dispatchEvent(simulatedEvent);
+    if (first) {
+        if(eventMap[event.type] === 'mouseup') {
+            firstTouchId = 0;
+        }
+
+        const simulatedEvent = document.createEvent('MouseEvent');
+        simulatedEvent.initMouseEvent(eventMap[event.type], true, true, window, 1, first.screenX, first.screenY, first.clientX, first.clientY, false, false, false, false, 0/*left*/, null);
+
+        first.target.dispatchEvent(simulatedEvent);
+    }
+
     event.preventDefault();
 }
